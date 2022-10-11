@@ -1,27 +1,38 @@
 from urllib import request
-import requests  # for using API
-import xml.etree.ElementTree as ET  # for parsing XML
-import numpy as np  # for using pandas
-import pandas as pd  # for using dataframes
+import requests
+import xml.etree.ElementTree as ET
 from .save_objects import save_data_to_model
+
+
+def find_data(node):
+    vin = node.find("vin").text
+    # try:
+    id = node.find("id").text if node.find("id") else None
+    # except:
+    #     id = None
+    price = node.find("price").text
+    model = node.find("model").text if node.find("model") else None
+    if not model:
+        model = node.find("folder_id").text if node.find("folder_id") else None
+    dealer = node.find("dealer").text if node.find("dealer") else None
+    if not dealer:
+        dealer = "kan-ftp.kanavto.ru"
+
+    brand = node.find("brand").text if node.find("brand") else None
+    if not brand:
+        brand = node.find("mark_id").text if node.find("mark_id") else None
+
+    return vin, id, price, model, dealer, brand
 
 
 def get_data(request_url):
     r = requests.get(request_url)
     root = ET.fromstring(r.content)
-    df_cols = ["price", "dealer", "model", "vin"]
-
-    # rows = []
-    for node in root.findall(root[0].tag):
-        vin = node.find("vin").text
-        id = node.find("id").text
-        price = node.find("price").text
-        model = node.find("model").text
-        if not model:
-            model = node.find("folder_id")
-        dealer = node.find("dealer").text
-        brand = node.find("brand").text
-        # rows.append({"price": price, "dealer": dealer, "model": model, "vin": vin})
+    tag = "car" if root[0].tag == "cars" else "vehicle"
+    nodes = list(root.iter(tag))
+    # root.findall(root[0].tag)
+    for node in nodes:
+        vin, id, price, model, dealer, brand = find_data(node)
         car_data = {
             "name": vin,
             "instance_id": id,
@@ -33,5 +44,4 @@ def get_data(request_url):
         car_data["integration_url"] = request_url
 
         save_data_to_model(car_data)
-    # out_df = pd.DataFrame(rows, columns=df_cols)
     return 200
