@@ -1,6 +1,7 @@
 from tabnanny import verbose
 from django.utils import timezone
 from django.db import models
+from gallery.models import CarImage
 
 
 class DealerCenter(models.Model):
@@ -53,6 +54,7 @@ class Car(models.Model):
     integration_url = models.CharField(
         "integration_url", max_length=150, null=True, blank=True
     )
+    photos = models.ManyToManyField(CarImage, verbose_name="Фотки", blank=True)
 
     def save(self, *args, **kwargs):
         if self.created is None:
