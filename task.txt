@@ -19,16 +19,20 @@ Dc
 Model
 Created
 Updated
+
 DealerCenter (Дилерские центры)
 Id
 Name
 Address
+
 Brand (Бренд или марка авто)
 Id
 name
+
 CarModel (Модели авто)
 Id
 name
+
 CarImage (Картинки авто)
 Id
 Path

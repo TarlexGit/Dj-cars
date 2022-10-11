@@ -1,3 +1,5 @@
 backend/backend/cars/db.sqlite3
 __pycache__/
 .vscode/
+dump.rdb
+backend/backend/cars/media/*
