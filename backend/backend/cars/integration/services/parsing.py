@@ -30,15 +30,10 @@ def find_data(node):
         images = node.find("photos").iter("photo") if node.find("photos") else None
 
     img_objects = []
-    path = settings.MEDIA_ROOT
     if images:
         for i in images:
             res = requests.get(i.text)
             f_name = i.text.split("/")[-1]
-            # if res.status_code == 200:
-            # with open(path / f_name, "wb") as f:
-            #     shutil.copyfileobj(res.raw, f)
-            # img_name = i.text.split("/")[-1]
             new_img, status = CarImage.objects.update_or_create(url=i.text)
             img_temp = NamedTemporaryFile(delete=True)
 
@@ -49,8 +44,6 @@ def find_data(node):
 
             new_img.photo.save(f_name.split("?")[0], File(img_temp), save=True)
             img_objects.append(new_img)
-    # if not brand:
-    #     brand = node.find("mark_id").text if node.find("mark_id") else None
     return vin, id, price, model, dealer, brand, img_objects
 
 

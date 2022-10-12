@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  app:
+    command: >
+      sh -c "poetry run python backend/cars/manage.py migrate &&
+             poetry run python backend/cars/manage.py runscript main &&
+             poetry run python backend/cars/manage.py runserver 0.0.0.0:8000"
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+
+  redis:
+    image: redis:alpine
+
+  celery:
+    restart: always
+    build:
+      context: .
+    command: celery -A app worker -l info
+    volumes:
+      - ./backend/cars:/app
+    depends_on:
+      - redis
+      - app
