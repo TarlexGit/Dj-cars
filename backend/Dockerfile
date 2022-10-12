@@ -5,5 +5,3 @@ COPY poetry.lock pyproject.toml /app
 COPY backend/ /app/
 RUN pip3 install poetry
 RUN poetry install
-# RUN python backend/cars/manage.py migrate
-# RUN python backend/cars/manage.py runscript main
