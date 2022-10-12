@@ -1,3 +1,8 @@
+## started
+
+cd Dj-cars/backend
+docker-compose up --build
+
 ### 1)
 
 http://127.0.0.1:8000/admin/
